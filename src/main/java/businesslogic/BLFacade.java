@@ -1,4 +1,4 @@
-package businessLogic;
+package businesslogic;
 
 import java.io.Serializable;
 import java.util.Date;
