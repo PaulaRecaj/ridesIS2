@@ -1,6 +1,7 @@
 package testOperations;
 import org.mockito.Mockito;
-import businessLogic.BLFacade;
+
+import businesslogic.BLFacade;
 import gui.MainGUI;
 
 public class RidesTest {
