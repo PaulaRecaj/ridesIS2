@@ -1,14 +1,13 @@
 package businessLogic;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import java.util.List;
 
-//import domain.Booking;
 import domain.Ride;
 import domain.Traveler;
 import domain.User;
-//import domain.Admin;
 import domain.Alert;
 import domain.Booking;
 import domain.Car;
@@ -26,7 +25,7 @@ import javax.jws.WebService;
  * Interface that specifies the business logic.
  */
 @WebService
-public interface BLFacade {
+public interface BLFacade extends Serializable{
 
 	/**
 	 * This method returns all the cities where rides depart
@@ -105,8 +104,6 @@ public interface BLFacade {
 	public Driver getDriver(String erab);
 
 	public Traveler getTraveler(String erab);
-
-	//public Admin getAdmin(String erab);
 
 	public String getMotaByUsername(String erab);
 
