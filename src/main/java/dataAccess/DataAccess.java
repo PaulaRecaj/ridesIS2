@@ -1,6 +1,7 @@
 package dataAccess;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,7 +24,7 @@ import exceptions.RideMustBeLaterThanTodayException;
 /**
  * It implements the data access to the objectDb database
  */
-public class DataAccess {
+public class DataAccess implements Serializable {
 	private EntityManager db;
 	private EntityManagerFactory emf;
 
