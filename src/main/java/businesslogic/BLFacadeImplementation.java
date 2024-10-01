@@ -8,7 +8,7 @@ import javax.jws.WebMethod;
 import javax.jws.WebService;
 
 import configuration.ConfigXML;
-import dataAccess.DataAccess;
+import data_access.DataAccess;
 import domain.Ride;
 import domain.Traveler;
 import domain.User;

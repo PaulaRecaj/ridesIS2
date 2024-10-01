@@ -2,6 +2,7 @@ package gui;
 
 import java.net.URL;
 import java.util.Locale;
+import java.util.logging.Logger;
 
 import javax.swing.UIManager;
 import javax.xml.namespace.QName;
@@ -10,19 +11,24 @@ import javax.xml.ws.Service;
 import businesslogic.BLFacade;
 import businesslogic.BLFacadeImplementation;
 import configuration.ConfigXML;
-import dataAccess.DataAccess;
+import data_access.DataAccess;
 
 public class ApplicationLauncher {
 
 	public static void main(String[] args) {
+		
+		
 
 		ConfigXML c = ConfigXML.getInstance();
+		
+		Logger l = Logger.getLogger(ConfigXML.class.getName());
 
-		System.out.println(c.getLocale());
+		l.config(c.getLocale());
 
 		Locale.setDefault(new Locale(c.getLocale()));
 
-		System.out.println("Locale: " + Locale.getDefault());
+		l.config("Locale: "+ Locale.getDefault());
+		
 
 		try {
 
@@ -60,7 +66,8 @@ public class ApplicationLauncher {
 			// a.jLabelSelectOption.setText("Error: "+e.toString());
 			// a.jLabelSelectOption.setForeground(Color.RED);
 
-			System.out.println("Error in ApplicationLauncher: " + e.toString());
+			l.config("Error in ApplicationLauncher: " + e.toString());
+			
 		}
 		// a.pack();
 

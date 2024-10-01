@@ -15,6 +15,7 @@ import org.w3c.dom.NodeList;
  */
 public class ConfigXML {
 	
+	
 	private String configFile = "src/main/resources/config.xml";
 		
 	private String businessLogicNode;
@@ -69,7 +70,7 @@ public class ConfigXML {
 	public boolean isBusinessLogicLocal() {
 		return businessLogicLocal;
 	}
-	private static ConfigXML theInstance = new ConfigXML();
+	private static ConfigXML theInstance =  null; //new ConfigXML();
 
 	private ConfigXML(){
 		
@@ -118,7 +119,9 @@ public class ConfigXML {
 			  user=getTagValue("user", config);
 				
 			  password=getTagValue("password", config);
-
+			  
+			 
+			  
 			  System.out.print("Read from config.xml: ");
 			  System.out.print("\t businessLogicLocal="+businessLogicLocal);
 			  System.out.print("\t databaseLocal="+databaseLocal);
@@ -126,6 +129,8 @@ public class ConfigXML {
 					  
 		  } catch (Exception e) {
 			System.out.println("Error in ConfigXML.java: problems with "+ configFile);
+
+			
 		    e.printStackTrace();
 		  }		
 		
@@ -134,14 +139,22 @@ public class ConfigXML {
 	private static String getTagValue(String sTag, Element eElement)
 	 {
 		  NodeList nlList= eElement.getElementsByTagName(sTag).item(0).getChildNodes();
-		  Node nValue = (Node) nlList.item(0);
+		  Node nValue = nlList.item(0);
 
 		  return nValue.getNodeValue();
 
 	 }
 	
 	public static ConfigXML getInstance() {
+		
+		if(theInstance==null) {
+			
+			theInstance = new ConfigXML();
+			
+		}
+		
 		return theInstance;
+		
 	}
 
 	public String getBusinessLogicNode() {

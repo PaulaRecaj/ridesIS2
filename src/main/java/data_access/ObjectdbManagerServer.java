@@ -1,4 +1,4 @@
-package dataAccess;
+package data_access;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -15,6 +15,7 @@ import javax.swing.JTextArea;
 
 
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.awt.event.ActionEvent;
 
 /**
@@ -26,7 +27,7 @@ public class ObjectdbManagerServer extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	JTextArea textArea;
-	ConfigXML c;
+	transient ConfigXML c ;
 	
 	//For windows
     private String objectDbpath="src\\main\\resources\\objectdb.jar";
@@ -52,7 +53,7 @@ public class ObjectdbManagerServer extends JDialog {
 
 	public ObjectdbManagerServer() {
 	    
-		ConfigXML c=ConfigXML.getInstance();
+		ConfigXML conf=ConfigXML.getInstance();
 		
 		setTitle("objectDBManagerServer: running the database server");
 		setBounds(100, 100, 486, 180);
@@ -78,7 +79,7 @@ public class ObjectdbManagerServer extends JDialog {
 					    	 try {
 					    		    
 					    		    
-							    	Runtime.getRuntime().exec("java -cp "+objectDbpath+" com.objectdb.Server -port "+ c.getDatabasePort()+" stop");
+							    	Runtime.getRuntime().exec("java -cp "+objectDbpath+" com.objectdb.Server -port "+ conf.getDatabasePort()+" stop");
 							    	
 							    } catch (Exception ioe) {
 							    	System.out.println (ioe);
@@ -103,7 +104,7 @@ public class ObjectdbManagerServer extends JDialog {
 		}
 		
 		
-		if (c.isDatabaseLocal()) {
+		if (conf.isDatabaseLocal()) {
 			textArea.append("\nERROR, the database is configured as local");
 		}
 		else {
@@ -112,12 +113,12 @@ public class ObjectdbManagerServer extends JDialog {
 
 			
 			try {
-		    	Runtime.getRuntime().exec("java -cp "+objectDbpath+" com.objectdb.Server -port "+ c.getDatabasePort()+" start");
+		    	Runtime.getRuntime().exec("java -cp "+objectDbpath+" com.objectdb.Server -port "+ conf.getDatabasePort()+" start");
 		    } catch (Exception ioe) {
 		    	System.out.println (ioe);
 		    }
 
-		    textArea.append("\nAccess granted to: "+c.getUser());
+		    textArea.append("\nAccess granted to: "+conf.getUser());
 		    
 			textArea.append("\nPress button to exit this database server... ");
 			
