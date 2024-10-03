@@ -12,7 +12,6 @@ import dataAccess.DataAccess;
 import domain.Ride;
 import domain.Traveler;
 import domain.User;
-//import domain.Admin;
 import domain.Alert;
 import domain.Booking;
 import domain.Car;
@@ -35,8 +34,6 @@ public class BLFacadeImplementation implements BLFacade {
 		logger.info("Creating BLFacadeImplementation instance");
 
 		dbManager = new DataAccess();
-
-		// dbManager.close();
 
 	}
 
@@ -170,13 +167,6 @@ public class BLFacadeImplementation implements BLFacade {
 		return t;
 	}
 
-	/*@Override
-	public Admin getAdmin(String erab) {
-		dbManager.open();
-		Admin a = dbManager.getAdmin(erab);
-		dbManager.close();
-		return a;
-	}*/
 
 	@Override
 	public String getMotaByUsername(String erab) {
