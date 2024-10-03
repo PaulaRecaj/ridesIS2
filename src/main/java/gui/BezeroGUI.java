@@ -97,7 +97,7 @@ public class BezeroGUI extends JFrame {
 				if (bo.getStatus().equals("NotCompleted")) {
 					Complaint er = appFacadeInterface.getComplaintsByBook(bo);
 					if (er != null) {
-						if (er.getAurkeztua()) {
+						if (Boolean.TRUE.equals(er.getAurkeztua())) {
 							er.setEgoera("Erreklamazioa");
 						} else {
 							er.setEgoera("Ez aurkeztua");
