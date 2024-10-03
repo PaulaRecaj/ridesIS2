@@ -16,12 +16,13 @@ public class TravelerGUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
+	private static final String ETQ ="Etiquetas";
 	private JPanel jContentPane = null;
 	private JButton jButtonBookRides = null;
 	private JButton jButtonAlertakKudeatu;
 	private JButton jButtonDiruaKudeatu = null;
 	private JButton jButtonEgoera = null;
-	private JButton jButtonClose = new JButton(ResourceBundle.getBundle("Etiquetas").getString("Close"));
+	private JButton jButtonClose = new JButton(ResourceBundle.getBundle(ETQ).getString("Close"));
 	protected JLabel jLabelSelectOption;
 	private JButton bellButton = null;
 
@@ -40,7 +41,7 @@ public class TravelerGUI extends JFrame {
 		TravelerGUI.setBussinessLogic(LoginGUI.getBusinessLogic());
 
 		this.setSize(600, 400);
-		jLabelSelectOption = new JLabel(ResourceBundle.getBundle("Etiquetas").getString("TravelerGUI.Traveler"));
+		jLabelSelectOption = new JLabel(ResourceBundle.getBundle(ETQ).getString("TravelerGUI.Traveler"));
 		jLabelSelectOption.setBounds(179, 44, 240, 36);
 		jLabelSelectOption.setFont(new Font("Tahoma", Font.BOLD, 13));
 		jLabelSelectOption.setForeground(Color.BLACK);
@@ -48,7 +49,7 @@ public class TravelerGUI extends JFrame {
 
 		jButtonBookRides = new JButton();
 		jButtonBookRides.setBounds(39, 123, 240, 50);
-		jButtonBookRides.setText(ResourceBundle.getBundle("Etiquetas").getString("TravelerGUI.BookRides"));
+		jButtonBookRides.setText(ResourceBundle.getBundle(ETQ).getString("TravelerGUI.BookRides"));
 		jButtonBookRides.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				JFrame a = new BookGUI(username);
@@ -58,7 +59,7 @@ public class TravelerGUI extends JFrame {
 
 		jButtonAlertakKudeatu = new JButton();
 		jButtonAlertakKudeatu.setBounds(319, 123, 240, 50);
-		jButtonAlertakKudeatu.setText(ResourceBundle.getBundle("Etiquetas").getString("TravelerGUI.ManageAlerts"));
+		jButtonAlertakKudeatu.setText(ResourceBundle.getBundle(ETQ).getString("TravelerGUI.ManageAlerts"));
 		jButtonAlertakKudeatu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFrame a = new AlertakKudeatuGUI(username);
@@ -68,7 +69,7 @@ public class TravelerGUI extends JFrame {
 
 		jButtonDiruaKudeatu = new JButton();
 		jButtonDiruaKudeatu.setBounds(39, 203, 240, 50);
-		jButtonDiruaKudeatu.setText(ResourceBundle.getBundle("Etiquetas").getString("UserGUI.ManageMoney"));
+		jButtonDiruaKudeatu.setText(ResourceBundle.getBundle(ETQ).getString("UserGUI.ManageMoney"));
 		jButtonDiruaKudeatu.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				JFrame a = new MoneyGUI(username);
@@ -78,7 +79,7 @@ public class TravelerGUI extends JFrame {
 
 		jButtonEgoera = new JButton();
 		jButtonEgoera.setBounds(319, 203, 240, 50);
-		jButtonEgoera.setText(ResourceBundle.getBundle("Etiquetas").getString("TravelerGUI.BookManager"));
+		jButtonEgoera.setText(ResourceBundle.getBundle(ETQ).getString("TravelerGUI.BookManager"));
 		jButtonEgoera.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				JFrame a = new EgoeraGUI(username);
@@ -126,7 +127,7 @@ public class TravelerGUI extends JFrame {
 		jContentPane.add(bellButton);
 		setContentPane(jContentPane);
 
-		setTitle(ResourceBundle.getBundle("Etiquetas").getString("RegisterGUI.Traveler"));
+		setTitle(ResourceBundle.getBundle(ETQ).getString("RegisterGUI.Traveler"));
 		setResizable(false);
 
 	}
