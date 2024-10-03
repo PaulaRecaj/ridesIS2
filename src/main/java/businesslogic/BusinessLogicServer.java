@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.Serializable;
+import java.util.logging.Logger;
 
 /**
  * It runs the business logic server as a separate process.
@@ -37,6 +38,7 @@ public class BusinessLogicServer extends JDialog implements Serializable{
 	JTextArea textArea;
 	BLFacade server;
 	String service;
+	Logger logger = Logger.getLogger(getClass().getName());
 
 	public static void main(String[] args) {
 		try {
@@ -103,7 +105,7 @@ public class BusinessLogicServer extends JDialog implements Serializable{
 			try{
 				
 				if (!c.isDatabaseLocal()) {
-					System.out.println("\nWARNING: Please be sure ObjectdbManagerServer is launched\n           in machine: "+c.getDatabaseNode()+" port: "+c.getDatabasePort()+"\n");	
+					logger.info("\nWARNING: Please be sure ObjectdbManagerServer is launched\n           in machine: "+c.getDatabaseNode()+" port: "+c.getDatabasePort()+"\n");	
 				}
 				
 				service= "http://"+c.getBusinessLogicNode() +":"+ c.getBusinessLogicPort()+"/ws/"+c.getBusinessLogicName();
@@ -113,7 +115,7 @@ public class BusinessLogicServer extends JDialog implements Serializable{
 				
 			}
 			catch (Exception e) {
-				System.out.println("Error in BusinessLogicServer: "+e.toString());
+				logger.info("Error in BusinessLogicServer: "+e.toString());
 				textArea.append("\nYou should have not launched DBManagerServer...\n");
 				textArea.append("\n\nOr maybe there is a BusinessLogicServer already launched...\n");
 				throw e;
