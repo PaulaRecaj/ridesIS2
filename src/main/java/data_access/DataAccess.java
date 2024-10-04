@@ -528,11 +528,11 @@ public class DataAccess implements Serializable {
 			if (traveler == null) {
 				return false;
 			}
-
+ 
 			if (ride.getnPlaces() < seats) {
 				return false;
 			}
-
+ 
 			double ridePriceDesk = (ride.getPrice() - desk) * seats;
 			double availableBalance = traveler.getMoney();
 			if (availableBalance < ridePriceDesk) {
@@ -774,7 +774,7 @@ public class DataAccess implements Serializable {
 			return resultList.get(0);
 		}
 	}
-
+ 
 	public void createDiscount(Discount di) {
 		try {
 			db.getTransaction().begin();

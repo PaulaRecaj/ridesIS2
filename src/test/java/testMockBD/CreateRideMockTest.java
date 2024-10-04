@@ -55,7 +55,7 @@ public class CreateRideMockTest {
 	
 	@After
 	public void tearDown() {
-		persistenceMock.close(); 
+		persistenceMock.close();
 	}
 	
 	public Ride createRide(String from, String to, Date date, int nPlaces, float price, String driverName)throws RideAlreadyExistException, RideMustBeLaterThanTodayException {
