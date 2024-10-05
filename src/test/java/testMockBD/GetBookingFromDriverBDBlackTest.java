@@ -28,15 +28,14 @@ public class GetBookingFromDriverBDBlackTest {
 	 //additional operations needed to execute the test 
 	 static TestDataAccess testDA=new TestDataAccess();
 
-	@SuppressWarnings("unused")
+
 	private Driver driver;
-	@SuppressWarnings("unused")
 	private Ride ride;
 	@SuppressWarnings("unused")
 	private Traveler traveler;
 	
 	@Test
-	//Driver's username = null. Returns null. (2)
+	//Driver's username == null. Returns null. (2)
 	public void test1() {
 		String driverUsername = null;
 		try {
@@ -109,7 +108,6 @@ public class GetBookingFromDriverBDBlackTest {
 		String driverUsername = "Ainhoa";
 		String travelerUsername = "a";
 		boolean driverCreated=false;
-		List<Ride> rides = null;
 		
 		String rideFrom="Donostia";
 		String rideTo="Zarautz";
@@ -129,7 +127,6 @@ public class GetBookingFromDriverBDBlackTest {
 			    driver = testDA.addDriverWithRide(driverUsername, rideFrom, rideTo, rideDate, 0, 0);
 			    ride = driver.getCreatedRides().get(0);
 			    ride.setActive(false);
-			    rides = driver.getCreatedRides();
 			    Traveler traveller1 = new Traveler(travelerUsername,"123");
 				Booking booking1 = new Booking(ride, traveller1, 0);
 				List<Booking> bookings = new ArrayList<>();
@@ -142,7 +139,11 @@ public class GetBookingFromDriverBDBlackTest {
 			sut.open();
 			if(driverCreated) {
 				sut.updateDriver(driver);
-				sut.updateBooking(ride.getBookings().get(0));
+				for(Ride ride1: driver.getCreatedRides()) {
+					for(Booking book: ride1.getBookings()) {
+						sut.updateBooking(book);
+					}
+				}
 			}
 			List<Booking> booking = sut.getBookingFromDriver(driverUsername);
 			sut.close();

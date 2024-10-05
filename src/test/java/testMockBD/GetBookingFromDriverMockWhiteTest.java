@@ -71,7 +71,7 @@ public class GetBookingFromDriverMockWhiteTest {
 	Driver driver;
 	
 	@Test
-	//Driver with username Ainhoa does NOT exists in DB. Returns null.
+	//Driver with username!=null does NOT exists in DB. Returns null.
 	public void test1() {
 		String driverUsername = "Ainhoa";
 		
@@ -95,7 +95,7 @@ public class GetBookingFromDriverMockWhiteTest {
 	}
 	
 	@Test
-	//Driver with username Ainhoa exists in DB but it has no rides. Returns booking empty.
+	//Driver with username !=null exists in DB but it has no rides. Returns booking empty.
 	public void test2() {
 		
 		driver = null;
@@ -123,13 +123,13 @@ public class GetBookingFromDriverMockWhiteTest {
 	}
 	
 	@Test
-	/*Driver with username Ainhoa exists in DB, has rides with
+	/*Driver with username!=null exists in DB, has rides with
 	 * booking but are not active. Returns booking empty.
 	 */
 	public void test3() {
 		driver = null;
 		String driverUsername = "Zuri";
-		
+		String travelerUsername = "a";
 		String rideFrom="Donostia";
 		String rideTo="Zarautz";
 		
@@ -148,6 +148,12 @@ public class GetBookingFromDriverMockWhiteTest {
 		List<Ride> rides = new ArrayList<>();
 		rides.add(ride1);
 		driver.setCreatedRides(rides);
+		
+		Traveler traveller1 = new Traveler(travelerUsername,"123");
+		Booking booking1 = new Booking(ride1, traveller1, 0);
+		List<Booking> bookings = new ArrayList<>();
+		bookings.add(booking1);
+		ride1.setBookings(bookings);
 			
 		Mockito.when(db.createQuery("SELECT d FROM Driver d WHERE d.username = :username", Driver.class)).thenReturn(query);
 		Mockito.when(query.getSingleResult()).thenReturn(driver);
@@ -168,7 +174,7 @@ public class GetBookingFromDriverMockWhiteTest {
 	}
 	
 	@Test
-	/*Driver with username Ainhoa/Urtzi exists in DB, has rides 
+	/*Driver with username!=null exists in DB, has rides 
 	 * with booking and some/all are active. Returns booking
 	 */
 	public void test4() {

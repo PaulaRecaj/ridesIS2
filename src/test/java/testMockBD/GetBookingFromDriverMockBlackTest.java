@@ -147,6 +147,7 @@ public class GetBookingFromDriverMockBlackTest {
 	public void test4() {
 		driver = null;
 		String driverUsername = "Zuri";
+		String travelerUsername = "a";
 		
 		String rideFrom="Donostia";
 		String rideTo="Zarautz";
@@ -166,6 +167,12 @@ public class GetBookingFromDriverMockBlackTest {
 		List<Ride> rides = new ArrayList<>();
 		rides.add(ride1);
 		driver.setCreatedRides(rides);
+		
+		Traveler traveller1 = new Traveler(travelerUsername,"123");
+		Booking booking1 = new Booking(ride1, traveller1, 0);
+		List<Booking> bookings = new ArrayList<>();
+		bookings.add(booking1);
+		ride1.setBookings(bookings);
 			
 		Mockito.when(db.createQuery("SELECT d FROM Driver d WHERE d.username = :username", Driver.class)).thenReturn(query);
 		Mockito.when(query.getSingleResult()).thenReturn(driver);
