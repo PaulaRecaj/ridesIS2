@@ -71,7 +71,7 @@ public class GetBookingFromDriverMockWhiteTest {
 	Driver driver;
 	
 	@Test
-	//El driver con el username Ainhoa no existe en la BD. Devuelve null.
+	//Driver with username Ainhoa does NOT exists in DB. Returns null.
 	public void test1() {
 		String driverUsername = "Ainhoa";
 		
@@ -95,7 +95,7 @@ public class GetBookingFromDriverMockWhiteTest {
 	}
 	
 	@Test
-	//El driver con el username Ainhoa existe en la BD pero no tiene ningún ride.
+	//Driver with username Ainhoa exists in DB but it has no rides.
 	public void test2() {
 		
 		driver = null;
@@ -212,40 +212,4 @@ public class GetBookingFromDriverMockWhiteTest {
 		}
 		
 	}
-
-	
-	
-	
-	
-	/*
-	 * //Obtenemos la lista de reservas asociadas al conductor Urtzi. Expected
-	 * value: [ride1, ride2, ride4] public void test3() { String driverUsername =
-	 * "Urtzi"; String driverPassword="123";
-	 * 
-	 * driver = new Driver(driverUsername, driverPassword);
-	 * 
-	 * Calendar cal = Calendar.getInstance(); cal.set(2024, Calendar.MAY, 30); Date
-	 * date2 = UtilDate.trim(cal.getTime());
-	 * 
-	 * cal.set(2024, Calendar.MAY, 10); Date date3 = UtilDate.trim(cal.getTime());
-	 * 
-	 * cal.set(2024, Calendar.APRIL, 20); Date date4 = UtilDate.trim(cal.getTime());
-	 * 
-	 * 
-	 * driver.addRide("Donostia", "Madrid", date2, 5, 20); //ride1
-	 * driver.addRide("Irun", "Donostia", date2, 5, 2); //ride2
-	 * driver.addRide("Madrid", "Donostia", date3, 5, 5); //ride3
-	 * driver.addRide("Barcelona", "Madrid", date4, 0, 10); //ride4
-	 * 
-	 * Ride ride1 = driver.getCreatedRides().get(0); Ride ride2 =
-	 * driver.getCreatedRides().get(1); Ride ride3 =
-	 * driver.getCreatedRides().get(2); Ride ride4 =
-	 * driver.getCreatedRides().get(3);
-	 * 
-	 * ride3.setActive(false);
-	 * 
-	 * 
-	 * 
-	 * }
-	 */
 }
