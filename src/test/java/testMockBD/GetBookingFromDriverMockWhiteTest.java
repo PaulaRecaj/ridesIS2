@@ -95,7 +95,7 @@ public class GetBookingFromDriverMockWhiteTest {
 	}
 	
 	@Test
-	//Driver with username Ainhoa exists in DB but it has no rides.
+	//Driver with username Ainhoa exists in DB but it has no rides. Returns booking empty.
 	public void test2() {
 		
 		driver = null;
@@ -123,7 +123,9 @@ public class GetBookingFromDriverMockWhiteTest {
 	}
 	
 	@Test
-	//El driver con el username Zuri existe en la BD, tiene un Ride pero no está activo.
+	/*Driver with username Ainhoa exists in DB, has rides with
+	 * booking but are not active. Returns booking empty.
+	 */
 	public void test3() {
 		driver = null;
 		String driverUsername = "Zuri";
@@ -166,7 +168,9 @@ public class GetBookingFromDriverMockWhiteTest {
 	}
 	
 	@Test
-	//El driver con el username Urtzi existe en la BD, tiene un Ride y está activo. Devuelve el booking con un Ride
+	/*Driver with username Ainhoa/Urtzi exists in DB, has rides 
+	 * with booking and some/all are active. Returns booking
+	 */
 	public void test4() {
 		driver = null;
 		String driverUsername = "Zuri";

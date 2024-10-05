@@ -115,7 +115,7 @@ public class GetBookingFromDriverMockBlackTest {
 	
 	@Test
 	/*Driver's username != null, Driver in the DB, but their rides aren't 
-	in the DB. Returns null. (1,3,(6.1 o 6.2)*/
+	in the DB. Returns booking empty. (1,3,(6.1 o 6.2)*/
 	
 	public void test3() {
 		driver = null;
@@ -143,7 +143,7 @@ public class GetBookingFromDriverMockBlackTest {
 	
 	@Test
 	/*Driver's username != null, Driver in the DB, rides !=null,[] BUT no
-	 *ride is active (1,3,5,8). Returns null.*/
+	 *ride is active (1,3,5,8). Returns booking empty.*/
 	public void test4() {
 		driver = null;
 		String driverUsername = "Zuri";
@@ -187,7 +187,7 @@ public class GetBookingFromDriverMockBlackTest {
 	@Test
 	/*Driver's username != null, Driver in the DB, rides !=null,there's
 	 * at least one ride that is active, BUT ride.getBookings() == null.
-	 * Returns null. (1,3,5,7,10)*/
+	 * Returns booking is empty. (1,3,5,7,10)*/
 	public void test5() {
 		driver = null;
 		String driverUsername = "Zuri";
@@ -235,7 +235,7 @@ public class GetBookingFromDriverMockBlackTest {
 	@Test
 	/*Driver's username != null, Driver in the DB, rides !=null, there's
 	 *at least one ride that is active and ride.getBookings() != null.
-	 *Returns bookings. (1,3,5,7,10)*/
+	 *Returns booking (not empty). (1,3,5,7,9)*/
 	public void test6() {
 		driver = null;
 		String driverUsername = "Zuri";

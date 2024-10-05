@@ -20,20 +20,41 @@ import domain.Ride;
 import domain.Traveler;
 import testOperations.TestDataAccess;
 
-public class GetBookingFromDriverBDWhiteTest {
-
-	 //sut:system under test
+public class GetBookingFromDriverBDBlackTest {
+	 
+	//sut:system under test
 	 static DataAccess sut=new DataAccess();
 	 
 	 //additional operations needed to execute the test 
 	 static TestDataAccess testDA=new TestDataAccess();
 
+	@SuppressWarnings("unused")
 	private Driver driver;
+	@SuppressWarnings("unused")
 	private Ride ride;
-
+	@SuppressWarnings("unused")
+	private Traveler traveler;
+	
 	@Test
-	//Driver with username!=null does NOT exists in DB. Returns null.
+	//Driver's username = null. Returns null. (2)
 	public void test1() {
+		String driverUsername = null;
+		try {
+			sut.open();
+		    List<Booking> bookings = sut.getBookingFromDriver(driverUsername);
+		    assertNull(bookings);
+			
+		}catch(Exception e) {
+			fail();
+		}finally {
+			sut.close();
+		}
+		
+	}
+	
+	@Test
+	//Driver's username != null, but not in the DB. Returns null. (1,4)
+	public void test2() {
 		String driverUsername = "Ainhoa";
 		try {
 			sut.open();
@@ -48,8 +69,9 @@ public class GetBookingFromDriverBDWhiteTest {
 	}
 	
 	@Test
-	//Driver with username!=null exists in DB but it has no rides. Returns booking empty.
-	public void test2() {
+	/*Driver's username != null, Driver in the DB, but their rides aren't 
+	in the DB. Returns booking empty. (1,3,(6.1 o 6.2)*/
+	public void test3() {
 		String driverUsername = "Ainhoa";
 		String driverPassword = "123";
 		boolean driverCreated=false;
@@ -81,10 +103,9 @@ public class GetBookingFromDriverBDWhiteTest {
 	}
 	
 	@Test
-	/*Driver with username!=null exists in DB, has rides with
-	 * booking but are not active. Returns booking empty.
-	 */
-	public void test3() {
+	/*Driver's username != null, Driver in the DB, rides !=null,[] BUT no
+	 *ride is active (1,3,5,8). Returns booking empty.*/
+	public void test4() {
 		String driverUsername = "Ainhoa";
 		String travelerUsername = "a";
 		boolean driverCreated=false;
@@ -107,10 +128,8 @@ public class GetBookingFromDriverBDWhiteTest {
 			    driverCreated=true;
 			    driver = testDA.addDriverWithRide(driverUsername, rideFrom, rideTo, rideDate, 0, 0);
 			    ride = driver.getCreatedRides().get(0);
+			    ride.setActive(false);
 			    rides = driver.getCreatedRides();
-			    for(Ride rideI: rides) {
-			    	rideI.setActive(false);
-			    }
 			    Traveler traveller1 = new Traveler(travelerUsername,"123");
 				Booking booking1 = new Booking(ride, traveller1, 0);
 				List<Booking> bookings = new ArrayList<>();
@@ -123,11 +142,7 @@ public class GetBookingFromDriverBDWhiteTest {
 			sut.open();
 			if(driverCreated) {
 				sut.updateDriver(driver);
-				for(Ride ride1: driver.getCreatedRides()) {
-					for(Booking book: ride1.getBookings()) {
-						sut.updateBooking(book);
-					}
-				}
+				sut.updateBooking(ride.getBookings().get(0));
 			}
 			List<Booking> booking = sut.getBookingFromDriver(driverUsername);
 			sut.close();
@@ -151,11 +166,69 @@ public class GetBookingFromDriverBDWhiteTest {
 	}
 	
 	@Test
-	/*Driver with username!=null exists in DB, has rides 
-	 * with booking and some/all are active. Returns booking
-	 */
-	public void test4() {
-		String driverUsername = "Urtzi";
+	/*Driver's username != null, Driver in the DB, rides !=null,there's
+	 * at least one ride that is active, BUT ride.getBookings() == null.
+	 * Returns booking empty. (1,3,5,7,10)*/
+	public void test5() {
+		String driverUsername = "Ainhoa";
+		boolean driverCreated=false;
+		
+		String rideFrom="Donostia";
+		String rideTo="Zarautz";
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		Date rideDate=null;
+		try {
+			rideDate = sdf.parse("05/10/2026");
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		try{
+			//create Driver if necessary
+			testDA.open();
+			if (!testDA.existDriver(driverUsername)) {
+			    driverCreated=true;
+			    driver = testDA.addDriverWithRide(driverUsername, rideFrom, rideTo, rideDate, 0, 0);
+			    ride = driver.getCreatedRides().get(0);
+				List<Booking> bookings = new ArrayList<>();
+				ride.setBookings(bookings);
+
+			}
+			testDA.close();
+			
+			sut.open();
+			if(driverCreated) {
+				sut.updateDriver(driver);
+			}
+			List<Booking> booking = sut.getBookingFromDriver(driverUsername);
+			sut.close();
+			
+			System.out.println(booking);
+			assertTrue(booking.isEmpty());
+			
+						
+		}catch(Exception e) {
+			sut.close();
+			fail();
+		}finally {
+			  //Remove the created objects in the database (cascade removing)   
+			testDA.open();
+			if (driverCreated) {
+				testDA.removeDriver(driverUsername);
+				testDA.removeRide(driverUsername, rideFrom, rideTo, rideDate);
+			}
+	        testDA.close();
+	    }
+
+		
+	}
+	
+	@Test
+	/*Driver's username != null, Driver in the DB, rides !=null, there's
+	 *at least one ride that is active and ride.getBookings() != null.
+	 *Returns booking (not empty). (1,3,5,7,9)*/
+	public void test6() {
+		String driverUsername = "Ainhoa";
 		String travelerUsername = "a";
 		boolean driverCreated=false;
 		
@@ -211,7 +284,7 @@ public class GetBookingFromDriverBDWhiteTest {
 			}
 	        testDA.close();
 	    }
+		
 	}
-	
-	
+
 }
