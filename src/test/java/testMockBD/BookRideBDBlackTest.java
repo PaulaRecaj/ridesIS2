@@ -36,33 +36,41 @@ public class BookRideBDBlackTest {
 	// additional operations needed to execute the test
 	static TestDataAccess testDA = new TestDataAccess();
 
+	private String travelerName;
+	private String travelerPassw;
+	
+	private Ride ride;
+	private String rideFrom;
+	private String rideTo;
+	private int ridePlaces;
+	private float ridePrice;
+	private SimpleDateFormat sdf; 
+	private Date rideDate;
+	
+	private Driver driver;
+	
 	@Test
 	// //Se intenta reservar un ride metiendo parámetros null
 	public void test1() {
-		String travelerName = "Paula";
-		String travelerPassw = "a";
+		travelerName = "Paula";
+		travelerPassw = "a";
+		
+		rideFrom = "Donostia";
+		rideTo = "Agurain";
+		ridePlaces = 5;
+		ridePrice = 10;
 
-		String driverName = "DriverTest1";
-		String driverPassw = "a";
-
-		String rideFrom = "Donostia";
-		String rideTo = "Agurain";
-		int ridePlaces = 5;
-		float ridePrice = 10;
-
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date rideDate = null;
+		sdf = new SimpleDateFormat("dd/MM/yyyy");
+		rideDate = null;
 		try {
 			rideDate = sdf.parse("22/12/2024");
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+		Traveler traveler = new Traveler(travelerName, travelerPassw);
+		traveler.setMoney(100);
+		
 		try {
-			Traveler traveler = new Traveler(travelerName, travelerPassw);
-			Driver driver = new Driver(driverName, driverPassw);
-			driver.addRide(rideFrom, rideTo, rideDate, ridePlaces, ridePrice);
-			traveler.setMoney(100);
-
 			sut.open();
 			sut.updateTraveler(traveler); // Actualizamos el dinero
 			sut.close();
@@ -74,7 +82,6 @@ public class BookRideBDBlackTest {
 			assertFalse(res);
 
 		} catch (Exception e) {
-			sut.close();
 			fail();
 		}
 	}
@@ -82,34 +89,34 @@ public class BookRideBDBlackTest {
 	@Test
 	// Se intenta reservar un ride metiendo parámetros null dentro del ride
 	public void test2() {
-		String travelerName = "Paula";
-		String travelerPassw = "a";
+		travelerName = "Paula";
+		travelerPassw = "a";
+		
+		rideFrom = "Donostia";
+		rideTo = "Agurain";
+		ridePlaces = 5;
+		ridePrice = 10;
 
-		String driverName = "DriverTest1";
-		String driverPassw = "a";
-
-		String rideFrom = "Donostia";
-		String rideTo = "Agurain";
-		int ridePlaces = 5;
-		float ridePrice = 10;
-
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date rideDate = null;
+		sdf = new SimpleDateFormat("dd/MM/yyyy");
+		rideDate = null;
 		try {
 			rideDate = sdf.parse("22/12/2024");
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+		Traveler traveler = new Traveler(travelerName, travelerPassw);
+		traveler.setMoney(100);
+		
 		try {
-			Traveler traveler = new Traveler(travelerName, travelerPassw);
-			Driver driver = new Driver(driverName, driverPassw);
-			Ride ride = new Ride(rideFrom, null, rideDate, ridePlaces, ridePrice, driver); // Ponemos null en el destino
-			driver.addRide(rideFrom, rideTo, rideDate, ridePlaces, ridePrice);
-			traveler.setMoney(100);
-
 			sut.open();
 			sut.updateTraveler(traveler); // Actualizamos el dinero
 			sut.close();
+			
+			testDA.open();
+			driver = testDA.addDriverWithRide("TestDriver", rideFrom, null, rideDate, ridePlaces, ridePrice);
+			ride = driver.getCreatedRides().get(0);
+			ride.setnPlaces(ridePlaces);
+			testDA.close();
 			
 			sut.open();
 			boolean res = sut.bookRide(travelerName, ride, 3, 1.5);
@@ -118,42 +125,46 @@ public class BookRideBDBlackTest {
 			assertFalse(res);
 
 		} catch (Exception e) {
-			sut.close();
 			fail();
+		}finally {
+			testDA.open();
+			testDA.removeRide(driver.getUsername(), rideFrom, rideTo, rideDate);
+			testDA.removeDriver(driver.getUsername());
+			testDA.close();
 		}
 	}
 
 	@Test
 	// Se intenta reservar un ride metiendo asientos que queremos en negativo o en 0
 	public void test3() {
-		String travelerName = "Paula";
-		String travelerPassw = "a";
+		travelerName = "Paula";
+		travelerPassw = "a";
+		
+		rideFrom = "Donostia";
+		rideTo = "Agurain";
+		ridePlaces = 5;
+		ridePrice = 10;
 
-		String driverName = "DriverTest1";
-		String driverPassw = "a";
-
-		String rideFrom = "Donostia";
-		String rideTo = "Agurain";
-		int ridePlaces = 5;
-		float ridePrice = 10;
-
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date rideDate = null;
+		sdf = new SimpleDateFormat("dd/MM/yyyy");
+		rideDate = null;
 		try {
 			rideDate = sdf.parse("22/12/2024");
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+		Traveler traveler = new Traveler(travelerName, travelerPassw);
+		traveler.setMoney(100);
+		
 		try {
-			Traveler traveler = new Traveler(travelerName, travelerPassw);
-			Driver driver = new Driver(driverName, driverPassw);
-			Ride ride = new Ride(rideFrom, rideTo, rideDate, ridePlaces, ridePrice, driver);
-			driver.addRide(rideFrom, rideTo, rideDate, ridePlaces, ridePrice);
-			traveler.setMoney(100);
-
 			sut.open();
 			sut.updateTraveler(traveler); // Actualizamos el dinero
 			sut.close();
+			
+			testDA.open();
+			driver = testDA.addDriverWithRide("TestDriver", rideFrom, rideTo, rideDate, ridePlaces, ridePrice);
+			ride = driver.getCreatedRides().get(0);
+			ride.setnPlaces(ridePlaces);
+			testDA.close();
 			
 			sut.open();
 			boolean res = sut.bookRide(travelerName, ride, -3, 1.5); // Asientos en negativo
@@ -162,43 +173,47 @@ public class BookRideBDBlackTest {
 			assertFalse(res);
 
 		} catch (Exception e) {
-			sut.close();
 			fail();
+		}finally {
+			testDA.open();
+			testDA.removeRide(driver.getUsername(), rideFrom, rideTo, rideDate);
+			testDA.removeDriver(driver.getUsername());
+			testDA.close();
 		}
 	}
 
 	@Test
 	// Se intenta reservar un ride metiendo un descuento negativo
 	public void test4() {
-		String travelerName = "Paula";
-		String travelerPassw = "a";
+		travelerName = "Paula";
+		travelerPassw = "a";
+		
+		rideFrom = "Donostia";
+		rideTo = "Agurain";
+		ridePlaces = 5;
+		ridePrice = 10;
 
-		String driverName = "DriverTest1";
-		String driverPassw = "a";
-
-		String rideFrom = "Donostia";
-		String rideTo = "Agurain";
-		int ridePlaces = 5;
-		float ridePrice = 10;
-
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date rideDate = null;
+		sdf = new SimpleDateFormat("dd/MM/yyyy");
+		rideDate = null;
 		try {
 			rideDate = sdf.parse("22/12/2024");
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+		Traveler traveler = new Traveler(travelerName, travelerPassw);
+		traveler.setMoney(100);
+		
 		try {
-			Traveler traveler = new Traveler(travelerName, travelerPassw);
-			Driver driver = new Driver(driverName, driverPassw);
-			Ride ride = new Ride(rideFrom, rideTo, rideDate, ridePlaces, ridePrice, driver);
-			driver.addRide(rideFrom, rideTo, rideDate, ridePlaces, ridePrice);
-			traveler.setMoney(100);
-
 			sut.open();
 			sut.updateTraveler(traveler); // Actualizamos el dinero
 			sut.close();
 
+			testDA.open();
+			driver = testDA.addDriverWithRide("TestDriver", rideFrom, rideTo, rideDate, ridePlaces, ridePrice);
+			ride = driver.getCreatedRides().get(0);
+			ride.setnPlaces(ridePlaces);
+			testDA.close();
+			
 			sut.open();
 			boolean res = sut.bookRide(travelerName, ride, 3, -5.5); // Descuento negativo
 			sut.close();
@@ -206,42 +221,46 @@ public class BookRideBDBlackTest {
 			assertFalse(res);
 
 		} catch (Exception e) {
-			sut.close();
 			fail();
+		}finally {
+			testDA.open();
+			testDA.removeRide(driver.getUsername(), rideFrom, rideTo, rideDate);
+			testDA.removeDriver(driver.getUsername());
+			testDA.close();
 		}
 	}
 
 	@Test
 	// Se intenta reservar un ride metiendo el precio del viaje en negativo o en 0
 	public void test5() {
-		String travelerName = "Paula";
-		String travelerPassw = "a";
+		travelerName = "Paula";
+		travelerPassw = "a";
+		
+		rideFrom = "Donostia";
+		rideTo = "Agurain";
+		ridePlaces = 5;
+		ridePrice = 0; // Precio a 0 (no es lógico)
 
-		String driverName = "DriverTest1";
-		String driverPassw = "a";
-
-		String rideFrom = "Donostia";
-		String rideTo = "Agurain";
-		int ridePlaces = 5;
-		float ridePrice = 0; // Precio a 0 (no es lógico)
-
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date rideDate = null;
+		sdf = new SimpleDateFormat("dd/MM/yyyy");
+		rideDate = null;
 		try {
 			rideDate = sdf.parse("22/12/2024");
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+		Traveler traveler = new Traveler(travelerName, travelerPassw);
+		traveler.setMoney(100);
+		
 		try {
-			Traveler traveler = new Traveler(travelerName, travelerPassw);
-			Driver driver = new Driver(driverName, driverPassw);
-			Ride ride = new Ride(rideFrom, rideTo, rideDate, ridePlaces, ridePrice, driver);
-			driver.addRide(rideFrom, rideTo, rideDate, ridePlaces, ridePrice);
-			traveler.setMoney(100);
-
 			sut.open();
 			sut.updateTraveler(traveler); // Actualizamos el dinero
 			sut.close();
+			
+			testDA.open();
+			driver = testDA.addDriverWithRide("TestDriver", rideFrom, rideTo, rideDate, ridePlaces, ridePrice);
+			ride = driver.getCreatedRides().get(0);
+			ride.setnPlaces(ridePlaces);
+			testDA.close();
 
 			sut.open();
 			boolean res = sut.bookRide(travelerName, ride, 3, 1.5);
@@ -250,8 +269,12 @@ public class BookRideBDBlackTest {
 			assertFalse(res);
 
 		} catch (Exception e) {
-			sut.close();
 			fail();
+		}finally {
+			testDA.open();
+			testDA.removeRide(driver.getUsername(), rideFrom, rideTo, rideDate);
+			testDA.removeDriver(driver.getUsername());
+			testDA.close();
 		}
 	}
 }
