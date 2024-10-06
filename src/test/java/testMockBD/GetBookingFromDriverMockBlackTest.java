@@ -146,8 +146,8 @@ public class GetBookingFromDriverMockBlackTest {
 	 *ride is active (1,3,5,8). Returns booking empty.*/
 	public void test4() {
 		driver = null;
-		String driverUsername = "Zuri";
-		String travelerUsername = "a";
+		String driverUsername = "Ainhoa";
+		String travelerUsername = "Gaizka";
 		
 		String rideFrom="Donostia";
 		String rideTo="Zarautz";
@@ -197,7 +197,7 @@ public class GetBookingFromDriverMockBlackTest {
 	 * Returns booking is empty. (1,3,5,7,10)*/
 	public void test5() {
 		driver = null;
-		String driverUsername = "Zuri";
+		String driverUsername = "Ainhoa";
 		String travelerUsername ="Gaizka";
 		
 		String rideFrom="Donostia";
@@ -245,7 +245,7 @@ public class GetBookingFromDriverMockBlackTest {
 	 *Returns booking (not empty). (1,3,5,7,9)*/
 	public void test6() {
 		driver = null;
-		String driverUsername = "Zuri";
+		String driverUsername = "Urtzi";
 		String travelerUsername ="Gaizka";
 		
 		String rideFrom="Donostia";

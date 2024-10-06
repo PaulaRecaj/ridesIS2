@@ -106,7 +106,7 @@ public class GetBookingFromDriverBDBlackTest {
 	 *ride is active (1,3,5,8). Returns booking empty.*/
 	public void test4() {
 		String driverUsername = "Ainhoa";
-		String travelerUsername = "a";
+		String travelerUsername = "Gaizka";
 		boolean driverCreated=false;
 		
 		String rideFrom="Donostia";
@@ -229,8 +229,8 @@ public class GetBookingFromDriverBDBlackTest {
 	 *at least one ride that is active and ride.getBookings() != null.
 	 *Returns booking (not empty). (1,3,5,7,9)*/
 	public void test6() {
-		String driverUsername = "Ainhoa";
-		String travelerUsername = "a";
+		String driverUsername = "Urtzi";
+		String travelerUsername = "Gaizka";
 		boolean driverCreated=false;
 		
 		String rideFrom="Lasarte";
