@@ -973,24 +973,7 @@ public class DataAccess implements Serializable {
 					.createQuery("SELECT r FROM Ride r WHERE r.date > CURRENT_DATE AND r.active = true", Ride.class);
 			List<Ride> rides = rideQuery.getResultList();
 
-			for (Alert alert : alerts) {
-				boolean found = false;
-				for (Ride ride : rides) {
-					if (UtilDate.datesAreEqualIgnoringTime(ride.getDate(), alert.getDate())
-							&& ride.getFrom().equals(alert.getFrom()) && ride.getTo().equals(alert.getTo())
-							&& ride.getnPlaces() > 0) {
-						alert.setFound(true);
-						found = true;
-						if (alert.isActive())
-							alertFound = true;
-						break;
-					}
-				}
-				if (!found) {
-					alert.setFound(false);
-				}
-				db.merge(alert);
-			}
+			alertFound = extracted(alertFound, alerts, rides);
 
 			db.getTransaction().commit();
 			return alertFound;
@@ -999,6 +982,29 @@ public class DataAccess implements Serializable {
 			db.getTransaction().rollback();
 			return false;
 		}
+	}
+	
+	//Método para mejorar el updateAlertaAurkituak
+	private boolean extracted(boolean alertFound, List<Alert> alerts, List<Ride> rides) {
+		for (Alert alert : alerts) {
+			boolean found = false;
+			for (Ride ride : rides) {
+				if (UtilDate.datesAreEqualIgnoringTime(ride.getDate(), alert.getDate())
+						&& ride.getFrom().equals(alert.getFrom()) && ride.getTo().equals(alert.getTo())
+						&& ride.getnPlaces() > 0) {
+					alert.setFound(true);
+					found = true;
+					if (alert.isActive())
+						alertFound = true;
+					break;
+				}
+			}
+			if (!found) {
+				alert.setFound(false);
+			}
+			db.merge(alert);
+		}
+		return alertFound;
 	}
 
 	public boolean createAlert(Alert alert) {
