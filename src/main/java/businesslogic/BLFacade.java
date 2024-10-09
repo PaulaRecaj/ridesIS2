@@ -145,8 +145,7 @@ public interface BLFacade extends Serializable{
 
 	public void deleteCar(Car car);
 
-	public boolean erreklamazioaBidali(String username1, String username2, Date gaur, Booking book, String textua,
-			boolean aurk);
+	public boolean erreklamazioaBidali(Complaint complaint);
 
 	public void updateComplaint(Complaint erreklamazioa);
 
