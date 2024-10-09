@@ -25,6 +25,7 @@ import exceptions.RideMustBeLaterThanTodayException;
  * It implements the data access to the objectDb database
  */
 public class DataAccess implements Serializable {
+	private static final String BOOK_FREEZE = "BookFreeze";
 	private EntityManager db;
 	private EntityManagerFactory emf;
 
@@ -137,11 +138,11 @@ public class DataAccess implements Serializable {
 			db.persist(book4);
 			db.persist(book5);
 
-			Movement m1 = new Movement(traveler1, "BookFreeze", 20);
-			Movement m2 = new Movement(traveler1, "BookFreeze", 40);
-			Movement m3 = new Movement(traveler1, "BookFreeze", 5);
-			Movement m4 = new Movement(traveler2, "BookFreeze", 4);
-			Movement m5 = new Movement(traveler1, "BookFreeze", 3);
+			Movement m1 = new Movement(traveler1, BOOK_FREEZE, 20);
+			Movement m2 = new Movement(traveler1, BOOK_FREEZE, 40);
+			Movement m3 = new Movement(traveler1, BOOK_FREEZE, 5);
+			Movement m4 = new Movement(traveler2, BOOK_FREEZE, 4);
+			Movement m5 = new Movement(traveler1, BOOK_FREEZE, 3);
 			Movement m6 = new Movement(driver1, "Deposit", 15);
 			Movement m7 = new Movement(traveler1, "Deposit", 168);
 			
