@@ -150,7 +150,7 @@ public class BookRideMockBlackTest {
 			fail();
 		}
 	}
-
+	
 	@Test
 	// Se intenta reservar un ride metiendo asientos que queremos en negativo o en 0
 	public void test3() {
