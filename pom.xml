@@ -31,7 +31,7 @@
     <sonar.organization>paularecaj</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <sonar.projectKey>PaulaRecaj_rides</sonar.projectKey> 
-    <sonar.token>${env.SONAR_TOKEN}</sonar.token>
+    <sonar.login>cd2b3de9f9afaa47e9be3713c79bb2b934abb5eb</sonar.login>
 </properties>
 
 
