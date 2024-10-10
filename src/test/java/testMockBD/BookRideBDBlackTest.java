@@ -1,27 +1,13 @@
 package testMockBD;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
-import javax.persistence.TypedQuery;
-
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 
 import data_access.DataAccess;
 import domain.Driver;
@@ -49,6 +35,7 @@ public class BookRideBDBlackTest {
 	
 	private Driver driver;
 	
+
 	@Test
 	// //Se intenta reservar un ride metiendo parámetros null
 	public void test1() {
@@ -81,7 +68,7 @@ public class BookRideBDBlackTest {
 
 			assertFalse(res);
 
-		} catch (Exception e) {
+		} catch (NullPointerException e) {
 			fail();
 		}
 	}

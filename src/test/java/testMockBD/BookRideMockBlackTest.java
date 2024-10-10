@@ -1,8 +1,6 @@
 package testMockBD;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.text.ParseException;
@@ -150,7 +148,7 @@ public class BookRideMockBlackTest {
 			fail();
 		}
 	}
-
+	
 	@Test
 	// Se intenta reservar un ride metiendo asientos que queremos en negativo o en 0
 	public void test3() {

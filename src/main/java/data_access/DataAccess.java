@@ -25,6 +25,7 @@ import exceptions.RideMustBeLaterThanTodayException;
  * It implements the data access to the objectDb database
  */
 public class DataAccess implements Serializable {
+	private static final String BOOK_FREEZE = "BookFreeze";
 	private EntityManager db;
 	private EntityManagerFactory emf;
 
@@ -137,11 +138,11 @@ public class DataAccess implements Serializable {
 			db.persist(book4);
 			db.persist(book5);
 
-			Movement m1 = new Movement(traveler1, "BookFreeze", 20);
-			Movement m2 = new Movement(traveler1, "BookFreeze", 40);
-			Movement m3 = new Movement(traveler1, "BookFreeze", 5);
-			Movement m4 = new Movement(traveler2, "BookFreeze", 4);
-			Movement m5 = new Movement(traveler1, "BookFreeze", 3);
+			Movement m1 = new Movement(traveler1, BOOK_FREEZE, 20);
+			Movement m2 = new Movement(traveler1, BOOK_FREEZE, 40);
+			Movement m3 = new Movement(traveler1, BOOK_FREEZE, 5);
+			Movement m4 = new Movement(traveler2, BOOK_FREEZE, 4);
+			Movement m5 = new Movement(traveler1, BOOK_FREEZE, 3);
 			Movement m6 = new Movement(driver1, "Deposit", 15);
 			Movement m7 = new Movement(traveler1, "Deposit", 168);
 			
@@ -737,13 +738,10 @@ public class DataAccess implements Serializable {
 		return era;
 	}
 
-	public boolean erreklamazioaBidali(String nor, String nori, Date gaur, Booking booking, String textua,
-			boolean aurk) {
+	public boolean erreklamazioaBidali(Complaint complaint) {
 		try {
 			db.getTransaction().begin();
-
-			Complaint erreklamazioa = new Complaint(nor, nori, gaur, booking, textua, aurk);
-			db.persist(erreklamazioa);
+			db.persist(complaint);
 			db.getTransaction().commit();
 			return true;
 		} catch (Exception e) {
@@ -852,38 +850,58 @@ public class DataAccess implements Serializable {
 		TypedQuery<User> query = db.createQuery("SELECT u FROM User u", User.class);
 		return query.getResultList();
 	}
+	
+	//Método 1 para reducir líneas del método deleteUser 
+	public void cancelRidesByUser(User us) {
+		List<Ride> rl = getRidesByDriver(us.getUsername());
+		if (rl != null) {
+			for (Ride ri : rl) {
+				cancelRide(ri);
+			}
+		}
+	}
+	
+	//Método 2 para reducir líneas del método deleteUser 
+	public void deleteCarsByUser (User us) {
+		Driver d = getDriver(us.getUsername());
+		List<Car> cl = d.getCars();
+		if (cl != null) {
+			for (int i = cl.size() - 1; i >= 0; i--) {
+				Car ci = cl.get(i);
+				deleteCar(ci);
+			}
+		}
+	}
+	
+	//Método 3 para reducir líneas del método deleteUser 
+	public void rejectBookedRidesByUser(User us) {
+		List<Booking> lb = getBookedRides(us.getUsername());
+		if (lb != null) {
+			for (Booking li : lb) {
+				li.setStatus("Rejected");
+				li.getRide().setnPlaces(li.getRide().getnPlaces() + li.getSeats());
+			}
+		}
+	}
 
+	//Método 4 para reducir líneas del método deleteUser 
+	public void deleteAlertsByUser(User us) {
+		List<Alert> la = getAlertsByUsername(us.getUsername());
+		if (la != null) {
+			for (Alert lx : la) {
+				deleteAlert(lx.getAlertNumber());
+			}
+		}
+	}
+	
 	public void deleteUser(User us) {
 		try {
 			if (us.getMota().equals("Driver")) {
-				List<Ride> rl = getRidesByDriver(us.getUsername());
-				if (rl != null) {
-					for (Ride ri : rl) {
-						cancelRide(ri);
-					}
-				}
-				Driver d = getDriver(us.getUsername());
-				List<Car> cl = d.getCars();
-				if (cl != null) {
-					for (int i = cl.size() - 1; i >= 0; i--) {
-						Car ci = cl.get(i);
-						deleteCar(ci);
-					}
-				}
+				cancelRidesByUser(us);
+				deleteCarsByUser(us);
 			} else {
-				List<Booking> lb = getBookedRides(us.getUsername());
-				if (lb != null) {
-					for (Booking li : lb) {
-						li.setStatus("Rejected");
-						li.getRide().setnPlaces(li.getRide().getnPlaces() + li.getSeats());
-					}
-				}
-				List<Alert> la = getAlertsByUsername(us.getUsername());
-				if (la != null) {
-					for (Alert lx : la) {
-						deleteAlert(lx.getAlertNumber());
-					}
-				}
+				rejectBookedRidesByUser(us);
+				deleteAlertsByUser(us);
 			}
 			db.getTransaction().begin();
 			us = db.merge(us);
@@ -955,24 +973,7 @@ public class DataAccess implements Serializable {
 					.createQuery("SELECT r FROM Ride r WHERE r.date > CURRENT_DATE AND r.active = true", Ride.class);
 			List<Ride> rides = rideQuery.getResultList();
 
-			for (Alert alert : alerts) {
-				boolean found = false;
-				for (Ride ride : rides) {
-					if (UtilDate.datesAreEqualIgnoringTime(ride.getDate(), alert.getDate())
-							&& ride.getFrom().equals(alert.getFrom()) && ride.getTo().equals(alert.getTo())
-							&& ride.getnPlaces() > 0) {
-						alert.setFound(true);
-						found = true;
-						if (alert.isActive())
-							alertFound = true;
-						break;
-					}
-				}
-				if (!found) {
-					alert.setFound(false);
-				}
-				db.merge(alert);
-			}
+			alertFound = extracted(alertFound, alerts, rides);
 
 			db.getTransaction().commit();
 			return alertFound;
@@ -981,6 +982,29 @@ public class DataAccess implements Serializable {
 			db.getTransaction().rollback();
 			return false;
 		}
+	}
+	
+	//Método para mejorar el updateAlertaAurkituak
+	private boolean extracted(boolean alertFound, List<Alert> alerts, List<Ride> rides) {
+		for (Alert alert : alerts) {
+			boolean found = false;
+			for (Ride ride : rides) {
+				if (UtilDate.datesAreEqualIgnoringTime(ride.getDate(), alert.getDate())
+						&& ride.getFrom().equals(alert.getFrom()) && ride.getTo().equals(alert.getTo())
+						&& ride.getnPlaces() > 0) {
+					alert.setFound(true);
+					found = true;
+					if (alert.isActive())
+						alertFound = true;
+					break;
+				}
+			}
+			if (!found) {
+				alert.setFound(false);
+			}
+			db.merge(alert);
+		}
+		return alertFound;
 	}
 
 	public boolean createAlert(Alert alert) {
