@@ -35,7 +35,7 @@
 </properties>
 
 
-<!-- https://mvnrepository.com/artifact/junit/junit AAA -->
+<!-- https://mvnrepository.com/artifact/junit/junit -->
 <dependencies>
 	<dependency>
   	  <groupId>junit</groupId>
