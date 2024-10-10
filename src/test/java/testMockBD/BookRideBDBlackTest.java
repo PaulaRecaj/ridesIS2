@@ -35,6 +35,7 @@ public class BookRideBDBlackTest {
 	
 	private Driver driver;
 	
+
 	@Test
 	// //Se intenta reservar un ride metiendo parámetros null
 	public void test1() {
@@ -67,7 +68,7 @@ public class BookRideBDBlackTest {
 
 			assertFalse(res);
 
-		} catch (Exception e) {
+		} catch (NullPointerException e) {
 			fail();
 		}
 	}
