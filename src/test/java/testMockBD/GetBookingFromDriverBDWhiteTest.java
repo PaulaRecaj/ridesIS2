@@ -86,7 +86,7 @@ public class GetBookingFromDriverBDWhiteTest {
 	 */
 	public void test3() {
 		String driverUsername = "Ainhoa";
-		String travelerUsername = "a";
+		String travelerUsername = "Gaizka";
 		boolean driverCreated=false;
 		List<Ride> rides = null;
 		
@@ -156,7 +156,7 @@ public class GetBookingFromDriverBDWhiteTest {
 	 */
 	public void test4() {
 		String driverUsername = "Urtzi";
-		String travelerUsername = "a";
+		String travelerUsername = "Gaizka";
 		boolean driverCreated=false;
 		
 		String rideFrom="Lasarte";

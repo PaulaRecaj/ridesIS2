@@ -128,8 +128,8 @@ public class GetBookingFromDriverMockWhiteTest {
 	 */
 	public void test3() {
 		driver = null;
-		String driverUsername = "Zuri";
-		String travelerUsername = "a";
+		String driverUsername = "Ainhoa";
+		String travelerUsername = "Gaizka";
 		String rideFrom="Donostia";
 		String rideTo="Zarautz";
 		
@@ -179,7 +179,7 @@ public class GetBookingFromDriverMockWhiteTest {
 	 */
 	public void test4() {
 		driver = null;
-		String driverUsername = "Zuri";
+		String driverUsername = "Urtzi";
 		String travelerUsername ="Gaizka";
 		
 		String rideFrom="Donostia";
