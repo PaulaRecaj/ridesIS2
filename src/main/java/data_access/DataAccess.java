@@ -26,6 +26,7 @@ import exceptions.RideMustBeLaterThanTodayException;
  */
 public class DataAccess implements Serializable {
 	private static final String BOOK_FREEZE = "BookFreeze";
+	private static final String ACCEPTED = "Accepted";
 	private EntityManager db;
 	private EntityManagerFactory emf;
 
@@ -126,11 +127,11 @@ public class DataAccess implements Serializable {
 			Booking book3 = new Booking(ride2, traveler2, 2);
 			Booking book5 = new Booking(ride5, traveler1, 1);
 
-			book1.setStatus("Accepted");
+			book1.setStatus(ACCEPTED);
 			book2.setStatus("Rejected");
-			book3.setStatus("Accepted");
-			book4.setStatus("Accepted");
-			book5.setStatus("Accepted");
+			book3.setStatus(ACCEPTED);
+			book4.setStatus(ACCEPTED);
+			book5.setStatus(ACCEPTED);
 
 			db.persist(book1);
 			db.persist(book2);
