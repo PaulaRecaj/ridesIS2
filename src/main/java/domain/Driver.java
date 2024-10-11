@@ -87,6 +87,11 @@ public class Driver extends User implements Serializable {
 		return super.equals(obj);
 
 	}
+	
+	@Override 
+	public int hashCode() {
+		  return super.hashCode();
+	}
 
 	public Ride removeRide(String from, String to, Date date) {
 		Ride r=null;
