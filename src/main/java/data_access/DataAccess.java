@@ -481,32 +481,36 @@ public class DataAccess implements Serializable {
 			return false;
 		}
 	}
-
+	
 	public boolean gauzatuEragiketa(String username, double amount, boolean deposit) {
 		try {
 			db.getTransaction().begin();
 			User user = getUser(username);
-			if (user != null) {
-				double currentMoney = user.getMoney();
-				if (deposit) {
-					user.setMoney(currentMoney + amount);
-				} else {
-					if ((currentMoney - amount) < 0)
-						user.setMoney(0);
-					else
-						user.setMoney(currentMoney - amount);
-				}
-				db.merge(user);
+			if (user == null) {
 				db.getTransaction().commit();
-				return true;
+				return false;
 			}
+			updateUserMoney(user, amount, deposit);
+			db.merge(user);
 			db.getTransaction().commit();
-			return false;
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 			db.getTransaction().rollback();
 			return false;
 		}
+	}
+
+	//IRATI (2) BAD SMELL: Write simple units of code
+	
+	//Metodo auxiliar: updateUserMoney()
+	private void updateUserMoney(User user, double amount, boolean deposit) {
+	    double currentMoney = user.getMoney();
+	    if (deposit) {
+	        user.setMoney(currentMoney + amount);
+	    } else {
+	        user.setMoney(Math.max(currentMoney - amount, 0));
+	    }
 	}
 
 	public void addMovement(User user, String eragiketa, double amount) {
@@ -564,10 +568,6 @@ public class DataAccess implements Serializable {
 	}
 	//Metodo 4: updateRideAndTraveler()
 	private void updateRideAndTraveler(Ride ride, Traveler traveler, double ridePriceDesk, Booking booking) {
-		/*
-		 * double ridePriceDesk = (ride.getPrice() - desk) * seats;
-		 * ride.setnPlaces(ride.getnPlaces() - seats);
-		 */
 	    traveler.addBookedRide(booking);
 	    traveler.setMoney(traveler.getMoney() - ridePriceDesk);
 	    traveler.setIzoztatutakoDirua(traveler.getIzoztatutakoDirua() + ridePriceDesk);
