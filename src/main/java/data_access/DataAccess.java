@@ -525,18 +525,14 @@ public class DataAccess implements Serializable {
 	public boolean bookRide(String username, Ride ride, int seats, double desk) {
 		try {
 			db.getTransaction().begin();
-
 			Traveler traveler = getTraveler(username);
-		
 			if(traveler == null ||!hasEnoughPlaces(ride, seats) || !hasEnoughBalance(traveler, ride, seats, desk)) {
 				return false;
 			}
 			Booking booking = createBooking(ride, traveler, seats, desk);
 			db.persist(booking);
-
 			double ridePriceDesk = (ride.getPrice() - desk) * seats;
 		    ride.setnPlaces(ride.getnPlaces() - seats);
-			
 			updateRideAndTraveler(ride, traveler, ridePriceDesk, booking);
 			db.getTransaction().commit();
 			return true;
@@ -675,7 +671,7 @@ public class DataAccess implements Serializable {
 			db.getTransaction().begin();
 
 			for (Booking booking : ride.getBookings()) {
-				if (booking.getStatus().equals("Accepted") || booking.getStatus().equals("NotDefined")) {
+				if (booking.getStatus().equals(ACCEPTED) || booking.getStatus().equals("NotDefined")) {
 					double price = booking.prezioaKalkulatu();
 					Traveler traveler = booking.getTraveler();
 					double frozenMoney = traveler.getIzoztatutakoDirua();
