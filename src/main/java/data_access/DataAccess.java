@@ -526,31 +526,17 @@ public class DataAccess implements Serializable {
 			db.getTransaction().begin();
 
 			Traveler traveler = getTraveler(username);
-			if (traveler == null) {
+		
+			if(traveler == null ||!hasEnoughPlaces(ride, seats) || !hasEnoughBalance(traveler, ride, seats, desk)) {
 				return false;
 			}
- 
-			if (ride.getnPlaces() < seats) {
-				return false;
-			}
- 
-			double ridePriceDesk = (ride.getPrice() - desk) * seats;
-			double availableBalance = traveler.getMoney();
-			if (availableBalance < ridePriceDesk) {
-				return false;
-			}
-
-			Booking booking = new Booking(ride, traveler, seats);
-			booking.setTraveler(traveler);
-			booking.setDeskontua(desk);
+			Booking booking = createBooking(ride, traveler, seats, desk);
 			db.persist(booking);
 
-			ride.setnPlaces(ride.getnPlaces() - seats);
-			traveler.addBookedRide(booking);
-			traveler.setMoney(availableBalance - ridePriceDesk);
-			traveler.setIzoztatutakoDirua(traveler.getIzoztatutakoDirua() + ridePriceDesk);
-			db.merge(ride);
-			db.merge(traveler);
+			double ridePriceDesk = (ride.getPrice() - desk) * seats;
+		    ride.setnPlaces(ride.getnPlaces() - seats);
+			
+			updateRideAndTraveler(ride, traveler, ridePriceDesk, booking);
 			db.getTransaction().commit();
 			return true;
 		} catch (Exception e) {
@@ -558,8 +544,40 @@ public class DataAccess implements Serializable {
 			db.getTransaction().rollback();
 			return false;
 		}
+	}	
+	//IRATI: (1) BAD SMELL: Write short units of code
+	
+	//Metodo 1: hasEnoughPlaces()
+	private boolean hasEnoughPlaces(Ride ride, int seats) {
+		return ride.getnPlaces() >= seats;
 	}
+	
+	//Metodo 2: hasEnoughBalance()
+	private boolean hasEnoughBalance(Traveler traveler, Ride ride, int seats, double desk) {
+		double ridePriceDesk = (ride.getPrice() - desk) * seats;
+		return traveler.getMoney() >= ridePriceDesk;
+	}
+	
+	//Metodo 3: createBooking()
+	private Booking createBooking(Ride ride, Traveler traveler, int seats, double desk) {
+		Booking booking = new Booking(ride, traveler, seats);
+		booking.setTraveler(traveler);
+		booking.setDeskontua(desk);
+		return booking;
+	}
+	//Metodo 4: updateRideAndTraveler()
+	private void updateRideAndTraveler(Ride ride, Traveler traveler, double ridePriceDesk, Booking booking) {
+		/*
+		 * double ridePriceDesk = (ride.getPrice() - desk) * seats;
+		 * ride.setnPlaces(ride.getnPlaces() - seats);
+		 */
+	    traveler.addBookedRide(booking);
+	    traveler.setMoney(traveler.getMoney() - ridePriceDesk);
+	    traveler.setIzoztatutakoDirua(traveler.getIzoztatutakoDirua() + ridePriceDesk);
 
+	    db.merge(ride);
+	    db.merge(traveler);
+	}
 	public List<Movement> getAllMovements(User user) {
 		TypedQuery<Movement> query = db.createQuery("SELECT m FROM Movement m WHERE m.user = :user", Movement.class);
 		query.setParameter("user", user);
