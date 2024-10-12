@@ -19,6 +19,7 @@ import domain.Discount;
 import domain.Driver;
 import domain.Complaint;
 import domain.Movement;
+import domain.RequestRide;
 import exceptions.RideMustBeLaterThanTodayException;
 import exceptions.RideAlreadyExistException;
 
@@ -79,11 +80,11 @@ public class BLFacadeImplementation implements BLFacade {
 	 * {@inheritDoc}
 	 */
 	@WebMethod
-	public Ride createRide(String from, String to, Date date, int nPlaces, float price, String driverName)
+	public Ride createRide(RequestRide rr)
 			throws RideMustBeLaterThanTodayException, RideAlreadyExistException {
 
 		dbManager.open();
-		Ride ride = dbManager.createRide(from, to, date, nPlaces, price, driverName);
+		Ride ride = dbManager.createRide(rr.getFrom(), rr.getTo(), rr.getDate(), rr.getnPlaces(), rr.getPrice(), rr.getDriverName());
 		dbManager.close();
 		return ride;
 	}

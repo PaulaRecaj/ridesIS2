@@ -15,7 +15,6 @@ import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import configuration.UtilDate;
 import domain.Car;
 import domain.Driver;
 import domain.Ride;
@@ -223,8 +222,7 @@ public class CreateRideGUI extends JFrame {
 				float price = Float.parseFloat(jTextFieldPrice.getText());
 
 				@SuppressWarnings("unused")
-				Ride r = facade.createRide(fieldOrigin.getText(), fieldDestination.getText(),
-						UtilDate.trim(jCalendar.getDate()), inputSeats, price, driver.getUsername());
+				Ride r = facade.createRide(null);
 				jLabelMsg.setText(ResourceBundle.getBundle("Etiquetas").getString("CreateRideGUI.RideCreated"));
 
 			} catch (RideMustBeLaterThanTodayException e1) {

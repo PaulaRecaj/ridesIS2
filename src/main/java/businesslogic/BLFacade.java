@@ -15,6 +15,7 @@ import domain.Discount;
 import domain.Driver;
 import domain.Complaint;
 import domain.Movement;
+import domain.RequestRide;
 import exceptions.RideMustBeLaterThanTodayException;
 import exceptions.RideAlreadyExistException;
 
@@ -47,11 +48,7 @@ public interface BLFacade extends Serializable{
 
 	/**
 	 * This method creates a ride for a driver
-	 * 
-	 * @param from    the origin location of a ride
-	 * @param to      the destination location of a ride
-	 * @param date    the date of the ride
-	 * @param nPlaces available seats
+	 * @param rr TODO
 	 * @param kotxe
 	 * @param driver  to which ride is added
 	 * 
@@ -61,7 +58,7 @@ public interface BLFacade extends Serializable{
 	 *                                           the driver
 	 */
 	@WebMethod
-	public Ride createRide(String from, String to, Date date, int nPlaces, float price, String driverName)
+	public Ride createRide(RequestRide rr)
 			throws RideMustBeLaterThanTodayException, RideAlreadyExistException;
 
 	/**

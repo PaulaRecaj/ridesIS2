@@ -62,14 +62,7 @@ public class AlertakKudeatuGUI extends JFrame {
 				ResourceBundle.getBundle("Etiquetas").getString("AlertGUI.Aktibo") };
 		DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
-		if (alertList != null) {
-			for (Alert alert : alertList) {
-				String formattedDate = dateFormat.format(alert.getDate());
-				Object[] rowData = { alert.getAlertNumber(), alert.getFrom(), alert.getTo(), formattedDate,
-						alert.isFound(), alert.isActive() };
-				model.addRow(rowData);
-			}
-		}
+		addAlertToTable(alertList, dateFormat, model);
 		table.setModel(model);
 
 		table.getColumnModel().getColumn(0).setMinWidth(0);
@@ -90,46 +83,39 @@ public class AlertakKudeatuGUI extends JFrame {
 		buttonPanel.add(addButton);
 
 		deleteButton = new JButton(ResourceBundle.getBundle("Etiquetas").getString("AlertGUI.DeleteAlert"));
-		deleteButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int selectedRow = table.getSelectedRow();
-				if (selectedRow != -1) {
-					int alertNumber = (int) table.getValueAt(selectedRow, 0);
-					boolean deleted = appFacadeInterface.deleteAlert(alertNumber);
-					if (deleted) {
-						refreshTable(username);
-					} else {
-						statusLabel.setText(ResourceBundle.getBundle("Etiquetas").getString("AlertGUI.DeleteAlertError"));
-					}
-				} else {
-					statusLabel.setText(ResourceBundle.getBundle("Etiquetas").getString("AlertGUI.SelectAlert"));
-				}
-			}
-		});
+		setDeleteButtonAction(username);
 		buttonPanel.add(deleteButton);
 
 		activateButton = new JButton(ResourceBundle.getBundle("Etiquetas").getString("AlertGUI.ActivateAlert"));
-		activateButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int row = table.getSelectedRow();
-				if (row != -1) {
-					int modelRow = table.convertRowIndexToModel(row);
-					int alertNumber = (int) table.getModel().getValueAt(modelRow, 0);
-					Alert al = appFacadeInterface.getAlert(alertNumber);
-					if (al.isActive()) {
-						statusLabel.setText(ResourceBundle.getBundle("Etiquetas").getString("AlertGUI.AlertActive"));
-					} else {
-						statusLabel.setText("");
-						al.setActive(true);
-						appFacadeInterface.updateAlert(al);
-						refreshTable(username);
-					}
-				}
-			}
-		});
+		setActiveButtonAction(username);
 		buttonPanel.add(activateButton);
 
 		deactivateButton = new JButton(ResourceBundle.getBundle("Etiquetas").getString("AlertGUI.DeactivateAlert"));
+		setDeactivateButtonAction(username);
+		buttonPanel.add(deactivateButton);
+
+		closeButton = new JButton(ResourceBundle.getBundle("Etiquetas").getString("Close"));
+		closeButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				closeButton_actionPerformed(e);
+			}
+		});
+		buttonPanel.add(closeButton);
+
+	}
+
+	private void addAlertToTable(List<Alert> alertList, SimpleDateFormat dateFormat, DefaultTableModel model) {
+		if (alertList != null) {
+			for (Alert alert : alertList) {
+				String formattedDate = dateFormat.format(alert.getDate());
+				Object[] rowData = { alert.getAlertNumber(), alert.getFrom(), alert.getTo(), formattedDate,
+						alert.isFound(), alert.isActive() };
+				model.addRow(rowData);
+			}
+		}
+	}
+
+	private void setDeactivateButtonAction(String username) {
 		deactivateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int row = table.getSelectedRow();
@@ -148,16 +134,46 @@ public class AlertakKudeatuGUI extends JFrame {
 				}
 			}
 		});
-		buttonPanel.add(deactivateButton);
+	}
 
-		closeButton = new JButton(ResourceBundle.getBundle("Etiquetas").getString("Close"));
-		closeButton.addActionListener(new ActionListener() {
+	private void setActiveButtonAction(String username) {
+		activateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				closeButton_actionPerformed(e);
+				int row = table.getSelectedRow();
+				if (row != -1) {
+					int modelRow = table.convertRowIndexToModel(row);
+					int alertNumber = (int) table.getModel().getValueAt(modelRow, 0);
+					Alert al = appFacadeInterface.getAlert(alertNumber);
+					if (al.isActive()) {
+						statusLabel.setText(ResourceBundle.getBundle("Etiquetas").getString("AlertGUI.AlertActive"));
+					} else {
+						statusLabel.setText("");
+						al.setActive(true);
+						appFacadeInterface.updateAlert(al);
+						refreshTable(username);
+					}
+				}
 			}
 		});
-		buttonPanel.add(closeButton);
+	}
 
+	private void setDeleteButtonAction(String username) {
+		deleteButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int selectedRow = table.getSelectedRow();
+				if (selectedRow != -1) {
+					int alertNumber = (int) table.getValueAt(selectedRow, 0);
+					boolean deleted = appFacadeInterface.deleteAlert(alertNumber);
+					if (deleted) {
+						refreshTable(username);
+					} else {
+						statusLabel.setText(ResourceBundle.getBundle("Etiquetas").getString("AlertGUI.DeleteAlertError"));
+					}
+				} else {
+					statusLabel.setText(ResourceBundle.getBundle("Etiquetas").getString("AlertGUI.SelectAlert"));
+				}
+			}
+		});
 	}
 
 	private void closeButton_actionPerformed(ActionEvent e) {
@@ -169,14 +185,7 @@ public class AlertakKudeatuGUI extends JFrame {
 		model.setRowCount(0);
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 		List<Alert> alertList = appFacadeInterface.getAlertsByUsername(username);
-		if (alertList != null) {
-			for (Alert alert : alertList) {
-				String formattedDate = dateFormat.format(alert.getDate());
-				Object[] rowData = { alert.getAlertNumber(), alert.getFrom(), alert.getTo(), formattedDate,
-						alert.isFound(), alert.isActive() };
-				model.addRow(rowData);
-			}
-		}
+		addAlertToTable(alertList, dateFormat, model);
 	}
 
 }
