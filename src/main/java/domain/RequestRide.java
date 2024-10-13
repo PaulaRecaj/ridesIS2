@@ -27,8 +27,6 @@ public class RequestRide implements Serializable{
 	private float price;
 	private String driverName;
 	
-	public RequestRide() {}
-	
 	public RequestRide(String from, String to, Date date, int nPlaces, float price, String driverName) {
 		
 		this.from=from;
@@ -87,8 +85,6 @@ public class RequestRide implements Serializable{
 	public void setDriverName(String driverName) {
 		this.driverName = driverName;
 	}
-	
-	
 	
 
 }
