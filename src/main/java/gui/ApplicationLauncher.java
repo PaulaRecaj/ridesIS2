@@ -10,6 +10,9 @@ import javax.xml.ws.Service;
 
 import businesslogic.BLFacade;
 import businesslogic.BLFacadeImplementation;
+import businesslogic.BLFactory;
+import businesslogic.LocalBLFacadeFactory;
+import businesslogic.RemoteBLFacadeFactory;
 import configuration.ConfigXML;
 import data_access.DataAccess;
 
@@ -29,9 +32,9 @@ public class ApplicationLauncher {
 
 		l.config("Locale: "+ Locale.getDefault());
 		
-
+		/*
 		try {
-
+		
 			BLFacade appFacadeInterface;
 			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 
@@ -70,7 +73,29 @@ public class ApplicationLauncher {
 			
 		}
 		// a.pack();
-
+*/
+			
+		try {
+			BLFactory factory;
+			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+			
+			if (c.isBusinessLogicLocal()) {
+				
+				factory = new LocalBLFacadeFactory();
+				
+			} else {
+				
+				factory = new RemoteBLFacadeFactory();
+			}
+			
+			BLFacade appFacadeInterface = factory.getBusinessLogicFactory();
+			MainGUI.setBussinessLogic(appFacadeInterface);
+			MainGUI a = new MainGUI();
+			a.setVisible(true);
+			
+		} catch (Exception e) {
+			l.config("Error in ApplicationLauncher: " + e.toString());
+		}
 	}
 
 }
