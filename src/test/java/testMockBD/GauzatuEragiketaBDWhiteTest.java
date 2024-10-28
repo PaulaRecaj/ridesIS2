@@ -135,6 +135,8 @@ public class GauzatuEragiketaBDWhiteTest {
 			System.out.println("dinero despues del retiro: " + dineroDespues);
 
 			assertTrue(dineroDespues == 0);
+			
+			//assertEquals(dineroDespues, 0);
 
 		} catch (Exception e) {
 
