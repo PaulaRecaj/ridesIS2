@@ -11,6 +11,7 @@ import javax.xml.ws.Service;
 import businesslogic.BLFacade;
 import businesslogic.BLFacadeImplementation;
 import businesslogic.BLFactory;
+import businesslogic.ExtendedIterator;
 import businesslogic.LocalBLFacadeFactory;
 import businesslogic.RemoteBLFacadeFactory;
 import configuration.ConfigXML;
@@ -95,6 +96,24 @@ public class ApplicationLauncher {
 			
 		} catch (Exception e) {
 			l.config("Error in ApplicationLauncher: " + e.toString());
+		}
+		BLFacade facade = new BLFacadeImplementation();
+		ExtendedIterator<String> i = facade.getDepartCitiesIterator(); 
+		String s;
+		System.out.println("_____________________"); 
+		System.out.println("FROM LAST TO FIRST");
+		i.goLast(); // Go to last element 
+		while (i.hasPrevious()) {
+			s = i.previous();
+			System.out.println(s); 
+		}
+		System.out.println(); 
+		System.out.println("_____________________");
+		System.out.println("FROM FIRST TO LAST"); 
+		i.goFirst(); // Go to first element
+		while (i.hasNext()) {
+			s = i.next();
+			System.out.println(s); 
 		}
 	}
 

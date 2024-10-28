@@ -35,6 +35,15 @@ public interface BLFacade extends Serializable{
 	 */
 	@WebMethod
 	public List<String> getDepartCities();
+	
+	/**
+	 * This method returns all the cities where rides depart
+	 * 
+	 * @return iterator of cities
+	 */
+	@WebMethod
+	public ExtendedIterator<String> getDepartCitiesIterator();
+
 
 	/**
 	 * This method returns all the arrival destinations, from all rides that depart

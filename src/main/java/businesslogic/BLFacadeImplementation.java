@@ -3,6 +3,7 @@ package businesslogic;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -59,6 +60,26 @@ public class BLFacadeImplementation implements BLFacade {
 		dbManager.close();
 
 		return departLocations;
+
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@WebMethod
+	public ExtendedIterator<String> getDepartCitiesIterator() {
+		dbManager.open();
+
+		List<String> departLocations = dbManager.getDepartCities();
+
+		dbManager.close();
+		
+		List<Object> departLocationsAsObjects = departLocations.stream()
+				.map(Object.class::cast)
+                .collect(Collectors.toList());
+
+		ExtendedIterator<String> res = new ExtendedIteratorImpl(departLocationsAsObjects);
+		return res;
 
 	}
 
