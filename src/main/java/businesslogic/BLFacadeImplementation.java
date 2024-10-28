@@ -73,12 +73,8 @@ public class BLFacadeImplementation implements BLFacade {
 		List<String> departLocations = dbManager.getDepartCities();
 
 		dbManager.close();
-		
-		List<Object> departLocationsAsObjects = departLocations.stream()
-				.map(Object.class::cast)
-                .collect(Collectors.toList());
 
-		ExtendedIterator<String> res = new ExtendedIteratorImpl(departLocationsAsObjects);
+		ExtendedIterator<String> res = new ExtendedIteratorImpl(departLocations);
 		return res;
 
 	}
